@@ -11,14 +11,12 @@ spec:
   selector:
     matchLabels:
       app: mysql
-      tier: mysql
   strategy:
     type: Recreate
   template:
     metadata:
       labels:
         app: mysql
-        tier: mysql
     spec:
       containers:
       - image: mysql:8.0
