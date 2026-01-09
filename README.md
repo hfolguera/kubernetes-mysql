@@ -21,3 +21,18 @@ create database <DATABASE_NAME>;
 create user '<USER>'@'%' identified by '<PASSWORD>';
 grant all privileges on <DATABASE_NAME>.* to '<USER>'@'%';
 ```
+
+# Backup
+TODO
+In order to perform a backup on a MySQL database, run the following command:
+```
+POD=`kubectl get pod -n mysql -o jsonpath='{.items[0].metadata.name}'`
+kubectl exec -it -n mysql $POD -- /usr/bin/mysqldump -u root --password=<PASSWORD> <DB_NAME> > $DEST_PATH/mysql_${DB}_backup_${DATE}.sql
+```
+
+# Restore
+To restore a database, run the following command:
+```
+POD=`kubectl get pod -n mysql -o jsonpath='{.items[0].metadata.name}'`
+kubectl exec -i ${POD} -n mysql -- mysql -u root -p<PASSWORD> <DB_NAME> < /nfs/homelab/backup/mysql/<DUMPFILE>
+```
