@@ -13,9 +13,10 @@ NS=mysql
 POD=`kubectl get pod -n $NS -o jsonpath='{.items[0].metadata.name}'`
 echo "[DEBUG] POD: $POD"
 
-DATABASES=`kubectl exec -i -n $NS $POD -- /usr/bin/mysql -u root --password=${PASS} -e "SHOW DATABASES;" | grep -v "+-" | grep -v Database | grep -v information_schema | grep -v performance_schema | grep -v Warning | awk '{print $1}'`
+DATABASES=`kubectl exec -i -n $NS $POD -- /usr/bin/mysql -u root --password=${PASS} -e "SHOW DATABASES;"`
 if [ $? -eq 0 ]
 then
+    DATABASES=`echo $DATABASES | tr ' ' '\n' | grep -v "+-" | grep -v Database | grep -v information_schema | grep -v performance_schema | grep -v Warning | awk '{print $1}'`
     echo "[DEBUG] DATABASES: $DATABASES"
 else
     echo "[ERROR] Cannot get MySQL databases!"
